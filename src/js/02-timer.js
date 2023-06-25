@@ -1,5 +1,6 @@
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
+import Notiflix from 'notiflix';
 
 const input = document.querySelector('input#datetime-picker');
 
@@ -11,8 +12,6 @@ const outSeconds = document.querySelector('[data-seconds]');
 const startButton = document.querySelector('[data-start]');
 startButton.disabled = true;
 
-let date = new Date();
-
 const options = {
   enableTime: true,
   time_24hr: true,
@@ -21,30 +20,39 @@ const options = {
   onClose(selectedDates) {
     console.log(selectedDates[0]);
 
-    if (selectedDates[0].getTime() < date.getTime()) {
-      alert('Please choose a date in the future');
+    if (selectedDates[0] < new Date()) {
+      Notiflix.Notify.warning('Ви вибрали дату в минулому, оберіть іншу!');
       return;
     }
     startButton.disabled = false;
     startButton.addEventListener('click', () => {
-      let a = selectedDates[0].getTime() - date.getTime();
       timerId = setInterval(() => {
-        let b = convertMs(a);
-        console.log(a);
-        console.log(b);
-        outDays.innerHTML = b.days;
+        let date = new Date();
+        let remainTime = convertMs(selectedDates[0] - date);
+        if (selectedDates[0] - date <= 0) {
+          return;
+        }
 
-        outHours.innerHTML = b.hours;
+        let outObj = {
+          days: outDays,
+          hours: outHours,
+          minutes: outMinutes,
+          seconds: outSeconds,
+        };
 
-        outMinutes.innerHTML = b.minutes;
-
-        outSeconds.innerHTML = b.seconds;
+        Object.keys(outObj).forEach(el => {
+          outObj[el].innerHTML = addLeadingZero(remainTime[el]);
+        });
       }, 1000);
     });
   },
 };
 
 flatpickr(input, options);
+
+function addLeadingZero(value) {
+  return String(value).padStart(2, '0');
+}
 
 function convertMs(ms) {
   // Number of milliseconds per unit of time
