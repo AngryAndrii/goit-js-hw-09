@@ -1,4 +1,6 @@
 'use strict';
+
+//
 import Notiflix from 'notiflix';
 
 let form = document.querySelector('.form');
