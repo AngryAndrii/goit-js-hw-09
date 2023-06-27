@@ -1,12 +1,13 @@
+'use strict';
 import Notiflix from 'notiflix';
 
 let form = document.querySelector('.form');
 
 form.addEventListener('submit', event => {
   event.preventDefault();
-  amount = Number(form.elements.amount.value);
-  delayStep = Number(form.elements.step.value);
-  delay = Number(form.elements.delay.value);
+  let amount = Number(form.elements.amount.value);
+  let delayStep = Number(form.elements.step.value);
+  let delay = Number(form.elements.delay.value);
 
   for (let position = 1; position <= amount; position += 1) {
     createPromise(position, delay)
