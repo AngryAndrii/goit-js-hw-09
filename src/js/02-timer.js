@@ -45,6 +45,7 @@ const options = {
           outObj[el].innerHTML = addLeadingZero(remainTime[el]);
         });
       }, 1000);
+      startButton.disabled = true;
     });
   },
 };
